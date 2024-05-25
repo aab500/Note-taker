@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Note Taker</title>
+<style>
+  body {
+    background-color: #1a1a1a;
+    color: #ffffff;
+    font-family: Arial, sans-serif;
+    display: center;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+ }
+  .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+        .row {
+            display: flex;
+            gap: 30px;
+            padding: 10px 15px;
+        }
+        .column {
+            flex: 50%;
+  }
+  #noteText {
+    font-size: 16px;
+    margin-top: 10px;
+    background-color: #333;
+    color: #ffffff;
+    border: 1px solid #555;
+    padding: 10px;
+    min-height: 150px;
+    resize: both;            
+    width: 90%;
+  }
+  #note102 {
+    font-size: 16px;
+    margin-top: 10px;
+    background-color: #333;
+    color: #ffffff;
+    border: 1px solid #555;
+    padding: 10px;
+    min-height: 140px;
+    resize: None;
+    width: 150%;
+    height: 350px;
+    margin-bottom: 10px;
+  }
+  #inputBox {
+            margin-top: 10px;
+            width: 100%;
+            height: 150px;
+            margin-bottom: 10px;
+            background-color: #333333;
+            color: #ffffff;
+            border: 1px solid #555555;
+	    resize: None;
+    width: 100%;
+}
+  #outputBox {
+            width: 100%;
+            height: 20apx;
+            margin-bottom: 10px;
+            background-color: #333333;
+            color: #ffffff;
+            border: 1px solid #555555;
+	    resize: None;
+    width: 100%;
+}
+  #TOU {
+            width: 100%;
+            height: 100px;
+            margin-bottom: 10px;
+            background-color: #333333;
+            color: #ffffff;
+            border: 1px solid #555555;
+	    resize: None;
+  }
+  #ROB {
+            width: 100%;
+            height: 100px;
+            margin-bottom: 10px;
+            background-color: #333333;
+            color: #ffffff;
+            border: 1px solid #555555;
+	    resize: None;
+  }
+  #RET {
+            width: 100%;
+            height: 100px;
+            margin-bottom: 10px;
+            background-color: #333333;
+            color: #ffffff;
+            border: 1px solid #555555;
+	    resize: None;
+  }
+  .buttons {
+    margin-top: 10px;
+    display: flex;
+    gap: 50%;
+  }
+  button {
+    background-color: #007acc;
+    color: #ffffff;
+    border: none;
+    padding: 8px 16px;
+    cursor: pointer;
+  }
+  button:hover {
+    background-color: #005f8a;
+  }
+  .checkboxes {
+    display: center;
+    flex-direction: column;
+    padding-left: 20px;
+    margin-top: 10px;
+  }
+  .checkbox-group {
+    display: center;
+    margin-bottom: 10px;
+  }
+  label {
+    margin-right: 10px;
+  }
+  input[type="checkbox"], input[type="radio"] {
+    margin-right: 5px;
+  }
+  .avg {
+    border: 1px solid #555;
+    padding: 8px;
+    cursor: pointer;
+  }
+  .ntf-label {
+    color: red;
+  }
+
+</style>
+<script>
+function updateText() {
+  var checkBoxes1 = document.querySelectorAll('input[name="options1"]:checked');
+  var checkBoxes2 = document.querySelector('input[name="options2"]:checked');
+  var checkBoxes3 = document.querySelectorAll('input[name="options3"]:checked');
+  var checkBoxes4 = document.querySelector('input[name="options4"]:checked');
+  var checkBoxes5 = document.querySelector('input[name="options5"]:checked'); // Added
+  var checkBoxes6 = document.querySelectorAll('input[name="options6"]:checked'); // Added
+
+  
+  var diagOptions = Array.from(checkBoxes1).map(cb => cb.value);
+  var accOptions = Array.from(checkBoxes3).map(cb => cb.value);
+  var testOption = checkBoxes4 ? checkBoxes4.value : '';
+  var ntfOption = checkBoxes5 ? checkBoxes5.value : ''; // Added
+  var touchOptions = Array.from(checkBoxes6).map(cb => cb.value); // Added
+  
+  var recommendation = '';
+  var diagnosis = '';
+  
+  if (ntfOption) {
+    recommendation = 'Contact Customer Service.';
+    diagnosis = 'NTF';
+  } else {
+    recommendation = 'Replace ' + diagOptions.join(', ');
+    diagnosis = 'DEF: ' + diagOptions.join(', ');
+  }
+  
+  var textValue = 'Problem: \nDiagnosis: ' + diagnosis + 
+                  (testOption ? '' + testOption : '') + 
+                  '\nRecommendation/Solution: ' + recommendation + 
+                  '\nBIOS LOCK/Enrollment: ' + (checkBoxes2 ? checkBoxes2.value : '') + 
+                  '\nAccessories: ' + accOptions.join(', ');
+  
+  document.getElementById('noteText').value = textValue;
+
+  var additionalTextValue = '1st Touch Repair (' + touchOptions.join(', ') + '):\nCDI: ';
+  document.getElementById('TOU').value = additionalTextValue;
+
+}
+function copyToClipboard() {
+  var copyText = document.getElementById("noteText");
+  copyText.select();
+  document.execCommand("copy");
+}
+
+function refreshPage() {
+  location.reload();
+}
+
+function scrapText() {
+  const inputText = document.getElementById("inputBox").value;
+  const lines = inputText.split("\n");
+  const firstLine = lines[0].trim(); // Get the first line
+
+  const noteTextArea = document.getElementById("noteText");
+  const noteLines = noteTextArea.value.split("\n");
+  noteLines[0] = noteLines[0] + " " + firstLine;
+  noteTextArea.value = noteLines.join("\n");
+}
+</script>
+</head>
+<body>
+
+<div class="container">
+  <div>
+    <textarea id="inputBox" placeholder="Paste the ticket after finishing selections!" rows="6" cols="50" oninput="scrapText()"></textarea>
+  </div>
+</div>
+
+<div class="container">
+  <textarea id="noteText" rows="6" cols="50">
+Problem:
+Diagnosis: DEF: 
+Recommendation/Solution: Replace 
+BIOS LOCK/Enrollment: 
+Accessories: </textarea>
+  <div class="buttons">
+    <button onclick="copyToClipboard()">Copy</button>
+    <button onclick="refreshPage()">Refresh</button>
+  </div>
+  <div class="checkboxes">
+    <div class="checkbox-group">
+      <label><input type="checkbox" name="options1" value="M/B" onchange="updateText()">M/B</label>
+      <label><input type="checkbox" name="options1" value="M/B AC Port" onchange="updateText()">M/B AC port</label>
+      <label><input type="checkbox" name="options1" value="M/B USB-A Port" onchange="updateText()">M/B USB-A port</label>
+      <label><input type="checkbox" name="options1" value="Headphone Jack" onchange="updateText()">Headphone Jack</label>
+      <br><br>
+      <label><input type="checkbox" name="options1" value="D/B" onchange="updateText()">D/B</label>
+      <label><input type="checkbox" name="options1" value="D/B AC Port" onchange="updateText()">D/B AC Port</label>
+      <label><input type="checkbox" name="options1" value="D/B USB-A Port" onchange="updateText()">D/B USB-A Port</label>
+      <br><br>
+      <label><input type="checkbox" name="options1" value="LCD NTS" onchange="updateText()">LCD NTS</label>
+      <label><input type="checkbox" name="options1" value="LCD TS" onchange="updateText()">LCD TS</label>
+      <label><input type="checkbox" name="options1" value="LCD cable" onchange="updateText()">LCD cable</label>
+      <label><input type="checkbox" name="options1" value="Loose LCD cable" onchange="updateText()">Loose cable</label>
+      <label><input type="checkbox" name="options1" value="LCD Digitizer" onchange="updateText()">LCD Digitizer</label>
+      <br><br>
+      <label><input type="checkbox" name="options1" value="KB" onchange="updateText()">KB</label>
+      <label><input type="checkbox" name="options1" value="KB WFC" onchange="updateText()">KB WFC</label>
+      <label><input type="checkbox" name="options1" value="Touch-Pad" onchange="updateText()">Touch-Pad</label>
+      <label><input type="checkbox" name="options1" value="Touch-Pad cable" onchange="updateText()">Touch-Pad cable</label>
+      <br><br>
+      <label><input type="checkbox" name="options1" value="Back cover" onchange="updateText()">Back cover</label>
+      <label><input type="checkbox" name="options1" value="Palm-rest" onchange="updateText()">Palm-rest</label>
+      <label><input type="checkbox" name="options1" value="Bezel" onchange="updateText()">Bezel</label>
+      <label><input type="checkbox" name="options1" value="Bottom cover" onchange="updateText()">Bottom cover</label>
+      <br><br>
+      <label><input type="checkbox" name="options1" value="R Hinge" onchange="updateText()">R Hinge</label>
+      <label><input type="checkbox" name="options1" value="L Hinge" onchange="updateText()">L Hinge</label>
+      <label><input type="checkbox" name="options1" value="Both Hinges" onchange="updateText()">Both Hinges</label>
+      <label><input type="checkbox" name="options1" value="R Hinge cap" onchange="updateText()">R Hinge cap</label>
+      <label><input type="checkbox" name="options1" value="L Hinge cap" onchange="updateText()">L Hinge cap</label>
+      <label><input type="checkbox" name="options1" value="Hinges cap" onchange="updateText()">Hinges cap</label>
+      <br><br>
+      <label><input type="checkbox" name="options1" value="Camera" onchange="updateText()">Camera</label>
+      <label><input type="checkbox" name="options1" value="Camera cable" onchange="updateText()">Camera cable</label>
+      <label><input type="checkbox" name="options1" value="Microphone" onchange="updateText()">Microphone</label>
+      <label><input type="checkbox" name="options1" value="WFC Camera" onchange="updateText()">WFC Camera</label>
+      <br><br>
+      <label><input type="checkbox" name="options1" value="Wifi Card" onchange="updateText()">Wifi Card</label>
+      <label><input type="checkbox" name="options1" value="Wifi Antennas" onchange="updateText()">Wifi Antennas</label>
+      <br><br>
+      <label><input type="checkbox" name="options1" value="Adapter" onchange="updateText()">Adapter</label>
+      <br><br>
+      <label class="ntf-label"><input type="checkbox" name="options5" value="NTF" onchange="updateText()">NTF</label>
+      <br><br>
+      <label><input type="checkbox" name="options1" value="L17" onchange="updateText()">L17</label>
+      <label><input type="checkbox" name="options1" value="L18" onchange="updateText()">L18</label>
+      <label><input type="checkbox" name="options1" value="L19" onchange="updateText()">L19</label>
+      <label><input type="checkbox" name="options1" value="L20" onchange="updateText()">L20</label>
+    </div>
+    <div class="checkbox-group">
+      <br><br>
+      <label><input type="radio" name="options2" value="Yes" onchange="updateText()">Yes</label>
+      <label><input type="radio" name="options2" value="No" onchange="updateText()">No</label>
+      <label><input type="radio" name="options2" value="Unknown" onchange="updateText()">Unknown</label>
+    </div>
+    <div class="checkbox-group">
+      <label><input type="radio" name="options4" value=". Limited test due to enrollment" onchange="updateText()">Limited test due to enrollment</label>
+      <label><input type="radio" name="options4" value=". Passed all other tests" onchange="updateText()">Passed all functionality tests</label>
+      <label><input type="radio" name="options4" value=". Unable to test functionality" onchange="updateText()">Unable to test functionality</label>
+    </div>
+    <div class="checkbox-group">
+      <label><input type="checkbox" name="options3" value="None" onchange="updateText()">None</label>
+      <label><input type="checkbox" name="options3" value="ADP" onchange="updateText()">ADP</label>
+      <label><input type="checkbox" name="options3" value="Full Case" onchange="updateText()">Full Case</label>
+      <label><input type="checkbox" name="options3" value="Half Case" onchange="updateText()">Half Case</label>
+    </div>
+  </div>
+
+  <div class="avg">
+    <div class="calculator">
+      <h3>Daily AVG</h3>
+      <form id="calculator-form">
+        <label for="first-input">1st Touch:</label>
+        <input type="number" id="first-input" step="0.01">
+        <label for="second-input">2nd Touch:</label>
+        <input type="number" id="second-input" step="0.01">
+        <button type="button" onclick="calculate()">Calculate</button>
+      </form>
+      <p id="result"></p>
+    </div>
+  </div>
+
+  <script>
+    function calculate() {
+      const firstNumber = parseFloat(document.getElementById('first-input').value) || 0;
+      const secondNumber = parseFloat(document.getElementById('second-input').value) || 0;
+      const result = (firstNumber * 0.33) + (secondNumber * 0.66);
+      document.getElementById('result').textContent = `Daily AVG: ${result.toFixed(2)}`;
+    }
+  </script>
+
+  <div class="row">
+    <div class="column">
+      <textarea id="TOU">
+1st Touch Repair ():
+CDI: </textarea>
+      <button onclick="copyText('TOU')">COPY</button>
+      <button onclick="refreshPage()">Refresh</button>
+ <div class="checkboxes">
+    <div class="checkbox-group">
+
+      <label><input type="checkbox" name="options6" value="LCD cable reseated" onchange="updateText()">LCD cable reseated</label>
+      <label><input type="checkbox" name="options6" value="Missing KB key added" onchange="updateText()">Missing KB key added</label>
+      <label><input type="checkbox" name="options6" value="Broken tip removed from the headphone jack" onchange="updateText()">Broken tip removed from the headphone jack</label>
+
+    </div>
+  </div>
+
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="column">
+      <textarea id="ROB">
+RMA-ON-BENCH
+CDI: 
+ORDER#: 
+Model: 
+Part Needed: 
+Reason: </textarea>
+      <button onclick="copyText('ROB')">COPY</button>
+      <button onclick="refreshPage()">Refresh</button>
+    </div>
+
+    <div class="column">
+      <textarea id="RET">
+Order#: 
+Part CDI: 
+Part SKU: 
+Part: 
+Reason: </textarea>
+      <button onclick="copyText('RET')">COPY</button>
+      <button onclick="refreshPage()">Refresh</button>
+    </div>
+  </div>
+
+  <div class="container">
+    <textarea id="note102" rows="15" cols="50">
+Required part is low
+Required part is out of stuck
+
+Contact Customer Service
+
+Received DEF part
+Received wrong part
+
+diagnostics
+Verify functionality
+frequently
+Received Defective 
+Received Wrong 
+incorrect previous audit - actual model is
+Wrong part delivered
+Accelerometer sensor
+Replace the M/B or send a replacement unit due to multiple previous repairs </textarea>
+  </div>
+</div>
+
+<script type="text/javascript">
+function copyText(noteId) {
+  var copyText = document.getElementById(noteId);
+  copyText.select();
+  copyText.setSelectionRange(0, 99999); /* For mobile devices */
+  document.execCommand("copy");
+}
+</script>
+
+</body>
+</html>
